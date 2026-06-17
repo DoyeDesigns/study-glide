@@ -1,4 +1,4 @@
-import { SITE, getOgImageUrl } from '@/config/siteMeta'
+import { SITE, getOgImages } from '@/config/siteMeta'
 import './globals.css'
 
 export const metadata = {
@@ -29,13 +29,13 @@ export const metadata = {
     title: SITE.name,
     description: SITE.description,
     url: SITE.url,
-    images: [{ url: getOgImageUrl(), width: SITE.ogImageWidth, height: SITE.ogImageHeight }],
+    images: getOgImages(),
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE.name,
     description: SITE.description,
-    images: [getOgImageUrl()],
+    images: getOgImages().map((img) => img.url),
   },
 }
 

@@ -5,17 +5,35 @@ export const SITE = {
   url: 'https://studyglidedu.com',
   description: 'Expert guidance for Nigerian students ready to study abroad.',
   /**
-   * Social + link preview image (NOT page photos like Contact’s Image(12).png).
-   * Replace public/og-image.png, then bump ogImageVersion so caches refresh.
+   * Social preview image in public/og-image.png.
+   * Do NOT add app/opengraph-image.jsx — that overrides this metadata.
+   * After replacing the file, bump ogImageVersion and redeploy.
    */
-  ogImageVersion: 4,
+  ogImageVersion: 5,
   ogImagePath: '/og-image.png',
   ogImageWidth: 512,
   ogImageHeight: 512,
 }
 
+/** Relative path for Next.js metadata (uses metadataBase in layout). */
+export function getOgImagePath() {
+  return `${SITE.ogImagePath}?v=${SITE.ogImageVersion}`
+}
+
+/** Absolute URL for external tools / manual checks. */
 export function getOgImageUrl() {
-  return `${SITE.url}${SITE.ogImagePath}?v=${SITE.ogImageVersion}`
+  return `${SITE.url}${getOgImagePath()}`
+}
+
+export function getOgImages() {
+  return [
+    {
+      url: getOgImagePath(),
+      width: SITE.ogImageWidth,
+      height: SITE.ogImageHeight,
+      alt: SITE.name,
+    },
+  ]
 }
 
 export function getCanonicalUrl(pathname) {
@@ -23,12 +41,12 @@ export function getCanonicalUrl(pathname) {
   return `${SITE.url}${pathname.endsWith('/') ? pathname.slice(0, -1) : pathname}`
 }
 
-/** Next.js metadata for a route (server components). */
+/** Next.js metadata for a route (server components). Same OG image on every page. */
 export function pageMetadata({ title, description, path = '/' }) {
   const pageTitle = title ? `${title} | ${SITE.shortName}` : SITE.name
   const pageDescription = description ?? SITE.description
   const url = getCanonicalUrl(path)
-  const image = getOgImageUrl()
+  const images = getOgImages()
 
   return {
     title: pageTitle,
@@ -40,13 +58,13 @@ export function pageMetadata({ title, description, path = '/' }) {
       url,
       siteName: SITE.name,
       type: 'website',
-      images: [{ url: image, width: SITE.ogImageWidth, height: SITE.ogImageHeight }],
+      images,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: [image],
+      images: images.map((img) => img.url),
     },
   }
 }
