@@ -54,7 +54,7 @@ export default function Navbar() {
   }, [mobileOpen])
 
   return (
-    <header className="relative z-[9999] bg-brand-800">
+    <header className="relative sticky top-0 z-[9999] bg-brand-800">
       <div className="shell py-3 sm:py-4 lg:py-6">
         <nav className="flex-none lg:flex items-center justify-between gap-4">
 
