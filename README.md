@@ -1,4 +1,4 @@
-# StudyGlide Educational Consult
+# StudyGlide Educational Consult 
 
 Next.js site for StudyGlide Educational Consult.
 
