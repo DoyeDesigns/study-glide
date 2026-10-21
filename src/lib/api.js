@@ -26,12 +26,7 @@ export async function apiRequest(path, { method = 'GET', body } = {}) {
     throw new Error('Form service is temporarily unavailable. Please email us directly.')
   }
 
-  let data = null
-  try {
-    data = await response.json()
-  } catch {
-    data = null
-  }
+  const data = await response.json().catch(() => null)
 
   if (!response.ok) {
     const error = new Error(data?.error || 'Something went wrong. Please try again.')
