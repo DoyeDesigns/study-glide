@@ -1,48 +1,20 @@
-import { isSupabaseConfigured, supabase, TESTIMONIALS_BUCKET } from '../lib/supabase'
-
-function getTestimonialVideoUrl(videoPath) {
-  if (!videoPath) return null
-
-  const trimmed = videoPath.trim()
-
-  // Allow full public URL stored in video_path (paste from Storage dashboard)
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return trimmed
-  }
-
-  if (!supabase) return null
-
-  let path = trimmed.replace(/^\/+/, '')
-  try {
-    path = decodeURIComponent(path)
-  } catch {
-    /* use as-is */
-  }
-
-  const { data } = supabase.storage.from(TESTIMONIALS_BUCKET).getPublicUrl(path)
-  return data.publicUrl
-}
+import { apiRequest, isApiConfigured } from '../lib/api'
 
 export async function fetchPublishedTestimonials() {
-  if (!isSupabaseConfigured()) {
+  if (!isApiConfigured()) {
     return []
   }
 
-  const { data, error } = await supabase
-    .from('testimonials')
-    .select('id, name, school, country, video_path')
-    .eq('is_published', true)
-    .order('sort_order', { ascending: true })
+  const data = await apiRequest('/testimonials.php')
+  const rows = Array.isArray(data.testimonials) ? data.testimonials : []
 
-  if (error) throw error
-
-  return (data ?? [])
+  return rows
     .map((row) => ({
       id: row.id,
       name: row.name,
       school: row.school,
       country: row.country,
-      videoUrl: getTestimonialVideoUrl(row.video_path),
+      videoUrl: row.videoUrl,
     }))
-    .filter((t) => t.videoUrl)
+    .filter((row) => row.videoUrl)
 }

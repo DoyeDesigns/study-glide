@@ -16,12 +16,18 @@ Open [http://localhost:3000](http://localhost:3000).
 Copy `.env.example` to `.env.local`:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-NEXT_PUBLIC_SUPABASE_TESTIMONIALS_BUCKET=testimonials
+NEXT_PUBLIC_API_BASE_URL=https://yourdomain.com/api
 ```
 
-On Vercel, add the same variables in **Project → Settings → Environment Variables** (replace any old `VITE_*` names).
+That is the `hosting/api` folder on Namecheap, with no trailing slash. On Vercel, set the same variable. Do this when you deploy the API. Until it is set, forms show an unavailable message and the testimonial section stays empty.
+
+## Namecheap (forms, testimonials, email)
+
+1. In cPanel, create a MySQL database and user. In phpMyAdmin, select that database and import `hosting/schema.sql`.
+2. Upload `hosting/api` to `public_html/api` and `hosting/media` to `public_html/media`.
+3. Copy `config.example.php` to `config.php` in that `api` folder. Fill in the database, the mailbox (`mail.privateemail.com`, port 465), `admin_email`, `media_base_url`, and `allowed_origins` (your live site and `www`). Set `configured` to `true`.
+4. Upload testimonial videos into `public_html/media/testimonials/`. In phpMyAdmin, insert a row in `testimonials` with `video_path` set to the file name.
+5. Submissions are in phpMyAdmin. Mail errors are in cPanel → Metrics → Errors. A saved row still counts as a successful form submit if the mailbox rejects the message.
 
 ## Build
 

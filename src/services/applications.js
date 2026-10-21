@@ -1,5 +1,4 @@
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
-import { notifyFormSubmission } from './formNotifications'
+import { apiRequest } from '../lib/api'
 
 export function buildApplicationRow(form, source) {
   const age = form.age === '' || form.age == null ? null : Number.parseInt(String(form.age), 10)
@@ -23,17 +22,6 @@ export function buildApplicationRow(form, source) {
 }
 
 export async function submitApplication(form, source) {
-  if (!isSupabaseConfigured()) {
-    throw new Error('Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your .env.local file.')
-  }
-
   const row = buildApplicationRow(form, source)
-  const { error } = await supabase.from('applications').insert(row)
-
-  if (error) throw error
-
-  await notifyFormSubmission('applications', {
-    ...row,
-    created_at: new Date().toISOString(),
-  })
+  await apiRequest('/applications.php', { method: 'POST', body: row })
 }

@@ -9,7 +9,10 @@ export function getSubmitErrorMessage(error) {
     return 'This email is already subscribed.'
   }
 
-  if (error.message?.includes('Supabase is not configured')) {
+  if (
+    String(error.message ?? '').includes('not configured') ||
+    String(error.message ?? '').includes('temporarily unavailable')
+  ) {
     return 'Form service is temporarily unavailable. Please email us directly.'
   }
 
