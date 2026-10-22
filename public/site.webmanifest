@@ -5,8 +5,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#0d2e30",
-  "background_color": "#0d2e30",
+  "theme_color": "#16484b",
+  "background_color": "#16484b",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

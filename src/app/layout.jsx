@@ -17,7 +17,7 @@ export const metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
-  themeColor: '#0d2e30',
+  themeColor: '#16484b',
   appleWebApp: {
     capable: true,
     title: SITE.shortName,
